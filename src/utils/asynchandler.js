@@ -1,4 +1,4 @@
-const asynchandler = (fn) => {async (req,res,next) => {
+const asynchandler = (fn) => async (req,res,next) => {
     try {
         await fn(req,res,next);
     } catch (err) {
@@ -7,6 +7,6 @@ const asynchandler = (fn) => {async (req,res,next) => {
             message : err.message
         })
     }
-}}
+}
 
 export {asynchandler}
