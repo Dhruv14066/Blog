@@ -17,11 +17,16 @@ const blogSchema = new Schema({
         type : Boolean,
         default : true
     },
+    visibility: {
+        type: String,
+        enum: ["public", "private"],
+        default: "public"
+    },
     owner :{
         type : Schema.Types.ObjectId,
         ref : "User",
         required : true
-    }  
+    } 
 }, { timestamps: true });
 
 blogSchema.plugin(mongoosePaginate);
