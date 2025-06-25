@@ -163,13 +163,22 @@ const getCurrentUser = asynchandler(async (req, res) => {
 
 const updateUserDetails = asynchandler(async (req, res) => {
   const { fullname, email } = req.body;
-  if (!fullname || !email) throw new ApiError(400, "All fields are required!");
+  if (!fullname || !email) throw new ApiError(400, "both field is required!");
+
+  const existingUser = await User.findOne({ email });
+  if (existingUser && existingUser._id.toString() !== req.user._id.toString()) {
+    throw new ApiError(409, "Email is already in use by another account");
+  }
 
   const user = await User.findByIdAndUpdate(
-    req.user._id,
+    req.user?._id,
     { $set: { fullname, email } },
     { new: true }
   ).select("-password");
+  
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
 
   return res.status(200).json(new ApiResponse(200, user, "User updated successfully!"));
 });
@@ -188,11 +197,13 @@ const updateUserAvatar = asynchandler(async (req, res) => {
   if (user.avatar) {
     try {
       const publicId = user.avatar
-        .split("/")
-        .slice(-2)
-        .join("/")
-        .replace(/\.[a-z]+$/i, "");
-      await deleteOnCloudinary(publicId);
+              .split("/")
+              .pop()                    
+              .replace(/\.[a-z]+$/i, "");
+    const deleteResult = await deleteOnCloudinary(publicId);
+    if (deleteResult.result !== "ok") {
+      console.warn("Cloudinary did not delete file:", deleteResult);
+    }
     } catch (err) {
       console.warn("Failed to delete old avatar:", err.message);
     }

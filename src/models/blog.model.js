@@ -1,4 +1,5 @@
-import { Schema, model } from "mongoose";
+import mongoose, { Schema, model } from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const blogSchema = new Schema({
     title: {
@@ -30,4 +31,4 @@ const blogSchema = new Schema({
 }, { timestamps: true });
 
 blogSchema.plugin(mongoosePaginate);
-export default model("Blog", blogSchema);
+export const Blog =  mongoose.model("Blog", blogSchema);

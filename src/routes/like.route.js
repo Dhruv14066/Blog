@@ -1,4 +1,4 @@
-import { Router, Router } from "express";
+import { Router} from "express";
 import {toggleBlogLike, toggleCommentLike, getalllikedblogs} from "../controllers/like.controller.js"
 import { verifyjwt } from "../middlewares/auth.js";
 
