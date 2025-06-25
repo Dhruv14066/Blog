@@ -1,4 +1,3 @@
-import { User } from "../models/user.controller.js";
 import { Blog } from "../models/blog.model.js";
 import { asynchandler } from "../utils/asynchandler.js";
 import { ApiError } from "../utils/apierror.js";
